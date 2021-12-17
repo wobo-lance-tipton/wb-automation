@@ -1,0 +1,34 @@
+{
+  "name": "wb-automation",
+  "version": "1.0.0",
+  "description": "Automated tests for OKR Canvas app via playwright",
+  "main": "index.js",
+  "author": "Lance Tipton",
+  "license": "MIT",
+  "repository": {
+    "url": "git+https://github.com/wobo-lance-tipton/wb-automation.git",
+    "type": "git"
+  },
+  "scripts": {
+    "format": "yarn pretty",
+    "pretty": "./node_modules/.bin/prettier --config ./configs/prettier.config.js --write '**/*.{js,jsx}'",
+    "preinstall": "npx npm-force-resolutions",
+    "task": "node ./tasks/runTask.js",
+    "test": "npm run task test",
+    "tests": "npm run task test"
+  },
+  "resolutions": {
+    "@keg-hub/args-parse": "7.0.0",
+    "@keg-hub/cli-utils": "0.4.2"
+  },
+  "devDependencies": {
+    "@keg-hub/args-parse": "7.0.0",
+    "@keg-hub/cli-utils": "0.4.2",
+    "@keg-hub/jsutils": "^8.7.0",
+    "@keg-hub/parse-config": "^0.2.1",
+    "@playwright/test": "^1.17.1",
+    "eslint": "8.4.1",
+    "eslint-config-prettier": "8.3.0",
+    "prettier": "2.5.1"
+  }
+}
