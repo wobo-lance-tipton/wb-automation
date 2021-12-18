@@ -1,9 +1,11 @@
 env: 
-  WB_BASE_URL: http://localhost:3000/
+  WB_BASE_URL: https://canvasqa-okrcanvas.dt.wobo-int.com/
+  WB_USER_EMAIL: "" 
+  WB_USER_PASS: ""
   WB_HEADED: false
   WB_HEADLESS: true
   WB_TEST_RETRIES: 1
   WB_TEST_TIMEOUT: 10000
-  WB_BROWSER_SPEED: 50
+  WB_BROWSER_SPEED: 2000
   WB_BROWSER_WIDTH: 1280
   WB_BROWSER_HEIGHT: 720

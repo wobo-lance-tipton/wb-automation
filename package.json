@@ -10,6 +10,7 @@
     "type": "git"
   },
   "scripts": {
+    "canvas": "npm run task canvas",
     "format": "yarn pretty",
     "pretty": "./node_modules/.bin/prettier --config ./configs/prettier.config.js --write '**/*.{js,jsx}'",
     "preinstall": "npx npm-force-resolutions",

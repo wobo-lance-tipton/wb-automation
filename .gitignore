@@ -108,3 +108,7 @@ dist
 
 # VScode root settings
 .vscode
+
+temp/**
+container/values-local.yml
+!temp/.keep

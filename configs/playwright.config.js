@@ -1,4 +1,5 @@
 const path = require('path')
+const globalSetup = require('./global.world')
 const { devices } = require('@playwright/test')
 const { toBool, toNum, noOpObj } = require('@keg-hub/jsutils')
 const { testsDir, configsDir } = require('../tasks/paths')
@@ -56,4 +57,8 @@ const config = {
   ],
 }
 
+
+globalSetup()
+
 module.exports = config
+
