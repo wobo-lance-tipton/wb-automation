@@ -12,6 +12,8 @@
   "scripts": {
     "automate": "node src/index.js",
     "canvas": "npm run task canvas",
+    "ct": "npm run clean:temp",
+    "clean:temp": "node scripts/cleanTemp.js",
     "cron": "npm run task cron",
     "format": "yarn pretty",
     "pretty": "./node_modules/.bin/prettier --config ./configs/prettier.config.js --write '**/*.{js,jsx}'",

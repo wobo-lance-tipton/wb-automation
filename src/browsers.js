@@ -12,10 +12,10 @@ const handleOutput = async output => {
   output &&
     output.map(({ browser, error }) => {
       if(!error)
-        return Logger.log(`${Logger.colors.green(`\n[PASS]`)} Browser ${capitalize(browser)} test automation`)
+        return Logger.log(`  ${Logger.colors.green(`✔ PASS`)} - Browser ${capitalize(browser)} test automation\n`)
 
-      Logger.log(Logger.colors.red(`[Fail]`), `Browser ${capitalize(browser)} test automation`)
-      Logger.log(`\t`, Logger.colors.red(error.message))
+      Logger.log(`  ${Logger.colors.red(`✕ FAIL`)} - Browser ${capitalize(browser)} test automation`)
+      Logger.log(`    `, Logger.colors.red(error.message))
       // TODO: Save report somewhere
     })
 

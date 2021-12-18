@@ -1,3 +1,4 @@
+const { URL } = require('url')
 const { selectors } = require('./selectors')
 const { Logger } = require('@keg-hub/cli-utils')
 const { noOpObj, wait } = require('@keg-hub/jsutils')
@@ -57,8 +58,9 @@ const login = async (context, pwConf=noOpObj) => {
    * Open the browser page to the world url
    * Should be a canvas url defined with WB_BASE_URL env
    */
-   Logger.highlight(`[WB-AUTO] Loading canvas url`, world.app.url)
-  await page.goto(world.app.url)
+  Logger.highlight(`[WB-AUTO] Loading canvas url`, world.app.url)
+  const worldAppUrl = new URL(world.app.url)
+  await page.goto(worldAppUrl.href)
 
   /**
    * If not logged in, page redirects to the login screen
@@ -67,13 +69,14 @@ const login = async (context, pwConf=noOpObj) => {
   await wait(world.app.timeout)
 
   const url = await page.url()
+  const pwAppUrl = new URL(url)
 
   /**
    * Validate the url is the same as the app.url
    * If it is, we are already logged in, so return
    * If we were redirected, then run through the login flow
    */
-  return world.app.url !== url ? await loginForm(page) : page
+  return worldAppUrl.href !== pwAppUrl.href ? await loginForm(page) : page
 }
 
 

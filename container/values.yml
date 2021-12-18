@@ -1,4 +1,4 @@
-env: 
+env:
   WB_BASE_URL: https://canvasqa-okrcanvas.dt.wobo-int.com/
   WB_USER_EMAIL: "" 
   WB_USER_PASS: ""

@@ -1,28 +1,36 @@
 const selectors = {
   login: {
     form: {
-      parent: 'div.email.textInput',
+      parent: `div.email.textInput`,
       email: `input#UserLogin_email`,
       continue: `input#continueBtn`,
       pass: `input#UserLogin_password`,
       signIn: `input#SigninBtn`,
     }
   },
-  menu: {
-    preview: 'a[data-testid="canvas-preview-1"]',
+  home: {
+    main: {
+      preview: `a[data-testid="canvas-preview-1"]`,
+      new: `button.MuiButtonBase-root >> text=New OKR Canvas`
+    },
+    modal: {
+      blank: `button[data-value="Blank"]`,
+      create: `button.MuiButtonBase-root >> text=Create`
+    }
   },
   canvas: {
     bar: {
-      add: 'div:nth-child(3) > button[type="button"]',
-      sticky: 'div:nth-child(3) > div > [draggable="true"]',
+      add: `div:nth-child(3) > button[type="button"]`,
+      sticky: `div:nth-child(3) > div > [draggable="true"]`,
     },
     header: {
-      name: 'h1[data-testid="canvas-name"]',
+      name: `h1[data-testid="canvas-name"]`,
     },
     stage: {
-      sticky: 'main#stage > div > article',
-      popper: 'main#stage > div[data-popper-placement="top"]',
-      delete: 'button[name="delete"]'
+      sticky: `main#stage > div > article`,
+      text: `div[spellcheck="false"]`,
+      popper: `main#stage > div[data-popper-placement="top"]`,
+      delete: `button[name="delete"]`
     }
   }
 }

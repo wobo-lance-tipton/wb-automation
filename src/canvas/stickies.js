@@ -15,7 +15,7 @@ const removeSticky = async page => {
    * Since the sticky was just added, it should be the last item on the canvas
    */
   const stickyLoc = await page.locator(selectors.canvas.stage.sticky).last()
-  stickyLoc.click()
+  await stickyLoc.click()
 
   /** Give popper time to showup */
   await wait(world.app.timeout)
@@ -23,6 +23,26 @@ const removeSticky = async page => {
   /** Finds the popper menu, then clicks the delete button */
   const menuPopLoc = await page.locator(selectors.canvas.stage.popper)
   await locatorClick(menuPopLoc, selectors.canvas.stage.delete)
+}
+
+/**
+ * Finds the most recently added sticky and adds text to it
+ * @param {Object} page - Playwright page object
+ * 
+ * @returns {Void}
+ */
+const addStickyText = async page => {
+  const stickyLoc = await page.locator(selectors.canvas.stage.sticky).last()
+  await stickyLoc.click()
+  
+  /** Give child div time update to content-editable */
+  await wait(world.app.timeout)
+
+  const textLoc = stickyLoc.locator(selectors.canvas.stage.text)
+  await textLoc.fill(`All your stickies are belong to us`)
+
+  await wait(world.app.timeout)
+  Logger.log(`[WB-AUTO] Finished adding text to sticky`)
 }
 
 /**
@@ -48,15 +68,17 @@ const addSticky = async page => {
 const addThenRemoveSticky = async page => {
   Logger.log(`[WB-AUTO] Adding sticky to canvas stage`)
   await addSticky(page)
-
-  Logger.log(`[WB-AUTO] Finished adding sticky to canvas stage`)
   await wait(world.app.timeout)
 
+  Logger.log(`[WB-AUTO] Adding text to sticky`)
+  await addStickyText(page)
+  await wait(world.app.timeout)
+  
   Logger.log(`[WB-AUTO] Removing sticky from canvas stage`)
   await removeSticky(page)
 
   await wait(world.app.timeout)
-  Logger.log(`[WB-AUTO] Finished removing sticky from canvas stage`)
+  Logger.log(`[WB-AUTO] Finished sticky interaction`)
 }
 
 module.exports = {
