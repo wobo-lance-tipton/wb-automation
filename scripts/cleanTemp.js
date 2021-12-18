@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const { Logger } = require('@keg-hub/cli-utils')
-const { containerDir, tempDir } = require('../tasks/paths')
+const { configsDir, tempDir } = require('../tasks/paths')
 const { loadEnvs } = require('../tasks/utils/envs/loadEnvs')
 
 /**
@@ -9,7 +9,7 @@ const { loadEnvs } = require('../tasks/utils/envs/loadEnvs')
  * Deletes the temp folder, then recreates it, and required sub-folders
  */
 ;(() => {
-  loadEnvs(process.env.NODE_ENV || 'local', [containerDir])
+  loadEnvs(process.env.NODE_ENV || 'local', [configsDir])
   const { WB_STORAGE_DIR=tempDir } = process.env
 
   Logger.empty()

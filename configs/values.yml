@@ -9,5 +9,5 @@ env:
   WB_BROWSER_SPEED: 2000
   WB_BROWSER_WIDTH: 1280
   WB_BROWSER_HEIGHT: 720
-  WB_CRON_TIME: "* * * * *"
+  WB_CRON_TIME: "*/5 * * * *"
   # WB_CRON_TIME: "*/10 * * * *"

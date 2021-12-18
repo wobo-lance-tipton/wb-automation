@@ -110,5 +110,5 @@ dist
 .vscode
 
 temp/**
-container/values-local.yml
+configs/values-local.yml
 !temp/.keep

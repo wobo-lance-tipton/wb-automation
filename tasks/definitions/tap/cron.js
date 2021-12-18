@@ -3,6 +3,8 @@ const { appRoot } = require('../../paths')
 const { noOpObj } = require('@keg-hub/jsutils')
 const { Logger, npm } = require('@keg-hub/cli-utils')
 
+let RUNNING_JOB
+
 /**
  * Validates the passed in cron time
  * @throws
@@ -19,6 +21,38 @@ const validateTime = time => {
   )
 
   process.exit(1)
+}
+
+
+/**
+ * Kills an actively running job
+ */
+const killRunningJob = () => {
+  RUNNING_JOB && RUNNING_JOB.stop()
+  RUNNING_JOB = undefined
+}
+
+/**
+ * Loop over exit events, and add handler to stop the cronjob
+ */
+const addExitListeners = () => {
+  let exitCalled
+  Array.from([
+    'exit',
+    'SIGINT',
+    'SIGUSR1',
+    'SIGUSR2',
+    'uncaughtException',
+    'SIGTERM'
+  ])
+    .map(event => process.on(event, exitCode => {
+      /** Only need to call exit once */
+      if(exitCalled) return
+      
+      exitCalled = true
+      Logger.warn(`\n[WB-AUTO] Exiting cronjob\n`)
+      killRunningJob()
+    }))
 }
 
 /**
@@ -40,21 +74,33 @@ const cronRun = async ({ params }) => {
     time,
   } = params
 
+  /** Clean the temp folder clean param exists */
   clean && await npm(['run', 'clean:temp'])
 
+  /** Stop a currently running job if it already exists */
+  killRunningJob()
+
+  /** Ensure the cronjob time is valid */
   validateTime(time)
 
+  /** Check if it should only run for a specific browser */
   const options = [`run`, `task`, `canvas`]
   browser && options.push(`--`, `browser=${browser}`)
-  
-  cron.schedule(time, async () => {
+
+  Logger.highlight(`[WB-AUTO] Starting cronjob schedule`, time)
+
+  /** Start the cronjob */
+  RUNNING_JOB = cron.schedule(time, async () => {
+    Logger.log(`[WB-AUTO] Running scheduled cronjob at`, new Date())
     await npm(options, noOpObj, appRoot)
   }, {scheduled: true})
+
+  addExitListeners()
 }
 
 module.exports = {
-  canvas: {
-    name: 'canvas',
+  cron: {
+    name: 'cron',
     alias: ['bld'],
     action: cronRun,
     example: 'npm run cron -- <options>',
@@ -84,7 +130,7 @@ module.exports = {
       },
       clean: {
         env: `WB_STORAGE_CLEAN`,
-        example: 'npm run canvas -- clean=true',
+        example: 'npm run cron -- clean=true',
         description: 'Cleans the temporary storage folder by deleting and recreating',
       }
     }
