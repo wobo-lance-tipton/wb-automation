@@ -1,5 +1,6 @@
 const path = require('path')
-const { runCmd } = require('@keg-hub/cli-utils')
+const { noOpObj } = require('@keg-hub/jsutils')
+const { runCmd, npm } = require('@keg-hub/cli-utils')
 const { appRoot, tempDir } = require('../../paths')
 const { setRunEnvs } = require('../../utils/envs/setRunEnvs')
 
@@ -17,10 +18,9 @@ const { setRunEnvs } = require('../../utils/envs/setRunEnvs')
  */
 const canvasRun = async ({ params }) => {
   setRunEnvs(params)
-  await runCmd(
-    `node`,
-    [path.join(appRoot, `./src/index.js`)],
-    {},
+  await npm(
+    ['run', 'automate'],
+    {env: {RUN_FROM_TASK: 'canvas'}},
     appRoot
   )
 }
@@ -31,7 +31,7 @@ module.exports = {
     alias: ['bld'],
     action: canvasRun,
     example: 'npm run canvas -- <options>',
-    description: 'tests playwright tests',
+    description: 'Runs playwright browser automation',
     options: {
       url: {
         required: true,
@@ -81,6 +81,12 @@ module.exports = {
         description: 'Height of the borwser when running in headed mode (720)',
         type: 'number',
         default: 720,
+      },
+      timeout: {
+        env: `WB_TEST_TIMEOUT`,
+        description: 'How long to wait until a test will timeout (10000 ms)',
+        type: 'number',
+        default: 2000,
       },
       speed: {
         env: `WB_BROWSER_SPEED`,

@@ -1,1 +1,1 @@
-module.exports = require('./canvas')
+require('./browsers').automate()

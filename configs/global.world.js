@@ -1,17 +1,20 @@
 const path = require('path')
+const { toNum } = require('@keg-hub/jsutils')
 const { appRoot, tempDir } = require('../tasks/paths')
-const {
-  WB_BASE_URL,
-  WB_USER_EMAIL,
-  WB_USER_PASS,
-  WB_STORAGE_DIR=tempDir,
-} = process.env
-
 
 const globalSetup = () => {
+  const {
+    WB_BASE_URL,
+    WB_USER_EMAIL,
+    WB_USER_PASS,
+    WB_TEST_TIMEOUT=2000,
+    WB_STORAGE_DIR=tempDir,
+  } = process.env
+
   global.world = {
     app: {
       url: WB_BASE_URL,
+      timeout: toNum(WB_TEST_TIMEOUT),
     },
     user: {
       email: WB_USER_EMAIL,
@@ -25,6 +28,8 @@ const globalSetup = () => {
       downloadsDir: path.join(WB_STORAGE_DIR, 'downloads'),
     }
   }
+
+  return global.world
 }
 
 module.exports = globalSetup
