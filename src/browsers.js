@@ -9,6 +9,8 @@ const pwConf = require('../configs/playwright.config')
  * Logs message based on the output
  */
 const handleOutput = async output => {
+  Logger.empty()
+
   output &&
     output.map(({ browser, error }) => {
       if(!error)

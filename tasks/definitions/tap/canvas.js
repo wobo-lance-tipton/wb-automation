@@ -1,6 +1,5 @@
-const path = require('path')
+const { npm } = require('@keg-hub/cli-utils')
 const { noOpObj } = require('@keg-hub/jsutils')
-const { runCmd, npm } = require('@keg-hub/cli-utils')
 const { appRoot, tempDir } = require('../../paths')
 const { setRunEnvs } = require('../../utils/envs/setRunEnvs')
 
@@ -11,13 +10,15 @@ const { setRunEnvs } = require('../../utils/envs/setRunEnvs')
  * @param {Object} args.tasks - All registered tasks of the CLI
  * @param {string} args.task - Task Definition of the task being test
  * @param {Array} args.options - arguments passed from the command line
- * @param {Object} args.globalConfig - Global config object for the keg-cli
  * @param {string} args.params - Passed in options, converted into an object
  *
  * @returns {void}
  */
 const canvasRun = async ({ params }) => {
   setRunEnvs(params)
+
+  params.clean && await npm(['run', 'clean:temp'])
+
   await npm(
     ['run', 'automate'],
     {env: {RUN_FROM_TASK: 'canvas'}},
@@ -97,7 +98,6 @@ module.exports = {
       },
       debug: {
         type: 'bool',
-        // default: false,
         env: `WB_TEST_DEBUG`,
         example: 'npm run canvas -- debug=true',
         description: 'Run playwright in debug mode (false)',
@@ -107,6 +107,11 @@ module.exports = {
         example: 'npm run canvas -- storage=/local/absolute/path/to/storage/dir',
         env: `WB_STORAGE_DIR`,
         description: 'Location to store temporary files',
+      },
+      clean: {
+        env: `WB_STORAGE_CLEAN`,
+        example: 'npm run canvas -- clean=true',
+        description: 'Cleans the temporary storage folder by deleting and recreating',
       }
     },
   },

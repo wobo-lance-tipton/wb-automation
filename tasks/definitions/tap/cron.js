@@ -35,9 +35,12 @@ const validateTime = time => {
  */
 const cronRun = async ({ params }) => {
   const {
-    time,
     browser,
+    clean,
+    time,
   } = params
+
+  clean && await npm(['run', 'clean:temp'])
 
   validateTime(time)
 
@@ -79,6 +82,11 @@ module.exports = {
           'wk',
         ],
       },
+      clean: {
+        env: `WB_STORAGE_CLEAN`,
+        example: 'npm run canvas -- clean=true',
+        description: 'Cleans the temporary storage folder by deleting and recreating',
+      }
     }
   }
 }
