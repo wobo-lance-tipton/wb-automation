@@ -12,10 +12,10 @@ const { locatorExists } = require('../utils/locatorExists')
  *
  * @returns {Void}
  */
-const loadFromExisting = async page => {
-  Logger.log(`[WB-AUTO] Loading canvas stage`)
+const loadFromExisting = async (page, browser) => {
+  Logger.log(`${browser} Loading canvas stage`)
   /** Click on the first canvas preview item to load the canvas stage */
-  await locatorClick(page, selectors.home.main.preview)
+  await locatorClick(page, selectors.home.main.preview, browser)
 
   /** Give some time for the canvas stage to load */
   await wait(world.app.timeout)
@@ -25,7 +25,7 @@ const loadFromExisting = async page => {
   await canvasLoc.waitFor({timeout: world.app.timeout})
 
   const url = await page.url()
-  Logger.highlight(`[WB-AUTO] Finished loading canvas stage`, url)
+  Logger.highlight(`${browser} Finished loading canvas stage`, url)
 }
 
 /**
@@ -35,18 +35,18 @@ const loadFromExisting = async page => {
  *
  * @returns {Void}
  */
-const loadCanvas = async page => {
+const loadCanvas = async (page, browser) => {
   /** Check if the canvas preview exist exists */
-  const exists = await locatorExists(page, selectors.home.main.preview)
-  Logger.highlight(`[WB-AUTO] Canvas exists`, exists)
+  const exists = await locatorExists(page, selectors.home.main.preview, browser)
+  Logger.highlight(`${browser} Canvas exists`, exists)
 
   /**
    * If a canvas does not exist, then create one
    * Otherwise load the first canvas on the home page
   */
   return !exists
-    ? await createCanvas(page)
-    : await loadFromExisting(page)
+    ? await createCanvas(page, browser)
+    : await loadFromExisting(page, browser)
 }
 
 module.exports = {

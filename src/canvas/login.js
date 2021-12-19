@@ -10,32 +10,32 @@ const { locatorClick } = require('../utils/locatorClick')
  *
  * @returns {Void}
  */
-const loginForm = async page => {
-  Logger.log(`[WB-AUTO] User not logged in, running login flow`)
+const loginForm = async (page, browser) => {
+  Logger.log(`${browser} User not logged in, running login flow`)
   
   /** Find the form and ensure it exists */
   const formLoc = page.locator(selectors.login.form.parent)
   await formLoc.waitFor({timeout: world.app.timeout})
-  await locatorClick(page, selectors.login.form.parent)
+  await locatorClick(page, selectors.login.form.parent, browser)
   
   /** Find the email input and fill with the users email */
-  Logger.highlight(`[WB-AUTO] Logging-in user`, world.user.email)
+  Logger.highlight(`${browser} Logging-in user`, world.user.email)
   const emailLoc = page.locator(selectors.login.form.email)
   await emailLoc.fill(world.user.email)
 
   /** Find and click the continue button */
-  await locatorClick(page, selectors.login.form.continue)
+  await locatorClick(page, selectors.login.form.continue, browser)
 
   /** Find the password input, and fill it with the user password */
-  Logger.log(`[WB-AUTO] Entering user password`)
+  Logger.log(`${browser} Entering user password`)
   const passLoc = page.locator(selectors.login.form.pass)
   await passLoc.waitFor({timeout: world.app.timeout})
   await passLoc.fill(world.user.pass)
 
   /** Find and click the singin button */
-  await locatorClick(page, selectors.login.form.signIn)
+  await locatorClick(page, selectors.login.form.signIn, browser)
 
-  Logger.log(`[WB-AUTO] Finished user login flow`)
+  Logger.log(`${browser} Finished user login flow`)
   return page
 }
 
@@ -47,10 +47,10 @@ const loginForm = async page => {
  *
  * @returns {Object} - Playwright page object created from the context
  */
-const login = async (context, pwConf=noOpObj) => {
+const login = async (context, pwConf=noOpObj, browser) => {
   if(!context) throw new Error(`Browser context is required to login`)
 
-  Logger.log(`[WB-AUTO] Creating new page`)
+  Logger.log(`${browser} Creating new page`)
   const page = await context.newPage()
   if(!page) throw new Error(`Browser page could not be created`)
 
@@ -58,7 +58,7 @@ const login = async (context, pwConf=noOpObj) => {
    * Open the browser page to the world url
    * Should be a canvas url defined with WB_BASE_URL env
    */
-  Logger.highlight(`[WB-AUTO] Loading canvas url`, world.app.url)
+  Logger.highlight(`${browser} Loading canvas url`, world.app.url)
   const worldAppUrl = new URL(world.app.url)
   await page.goto(worldAppUrl.href)
 
@@ -76,7 +76,7 @@ const login = async (context, pwConf=noOpObj) => {
    * If it is, we are already logged in, so return
    * If we were redirected, then run through the login flow
    */
-  return worldAppUrl.href !== pwAppUrl.href ? await loginForm(page) : page
+  return worldAppUrl.href !== pwAppUrl.href ? await loginForm(page, browser) : page
 }
 
 

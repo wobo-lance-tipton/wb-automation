@@ -9,22 +9,22 @@ const { locatorClick } = require('../utils/locatorClick')
  *
  * @returns {Void}
  */
-const createCanvas = async page => {
-  Logger.log(`[WB-AUTO] Canvas does not exist, opening create canvas modal`)
+const createCanvas = async (page, browser) => {
+  Logger.log(`${browser} Canvas does not exist, opening create canvas modal`)
 
   /** Open the create canvas model */
-  await locatorClick(page, selectors.home.main.new)
+  await locatorClick(page, selectors.home.main.new, browser)
   await wait(world.app.timeout)
 
   /** Select the blank canvas option */
-  Logger.highlight(`[WB-AUTO] Creating new`, `Blank Canvas`)
-  await locatorClick(page, selectors.home.modal.blank)
+  Logger.highlight(`${browser} Creating new`, `Blank Canvas`)
+  await locatorClick(page, selectors.home.modal.blank, browser)
 
   /** Click the create button to create the new canvas */
-  await locatorClick(page, selectors.home.modal.create)
+  await locatorClick(page, selectors.home.modal.create, browser)
 
   await wait(world.app.timeout)
-  Logger.log(`[WB-AUTO] Finish creating new Canvas`)
+  Logger.log(`${browser} Finish creating new Canvas`)
 }
 
 module.exports = {

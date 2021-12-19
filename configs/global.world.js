@@ -1,5 +1,5 @@
 const path = require('path')
-const { toNum } = require('@keg-hub/jsutils')
+const { toNum, toBool } = require('@keg-hub/jsutils')
 const { appRoot, tempDir } = require('../tasks/paths')
 
 const globalSetup = () => {
@@ -7,6 +7,9 @@ const globalSetup = () => {
     WB_BASE_URL,
     WB_USER_EMAIL,
     WB_USER_PASS,
+    WB_RUN_SYNC=false,
+    WB_STICKY_RUNS=1,
+    WB_STICKY_WAIT=1,
     WB_TEST_TIMEOUT=2000,
     WB_STORAGE_DIR=tempDir,
   } = process.env
@@ -14,6 +17,10 @@ const globalSetup = () => {
   global.world = {
     app: {
       url: WB_BASE_URL,
+      sync: toBool(WB_RUN_SYNC),
+      // Convert the sticky wait time from seconds to milliseconds
+      stickyWait: toNum(WB_STICKY_WAIT) * 1000,
+      stickyRuns: toNum(WB_STICKY_RUNS),
       timeout: toNum(WB_TEST_TIMEOUT),
     },
     user: {

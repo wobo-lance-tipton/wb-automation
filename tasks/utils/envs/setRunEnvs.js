@@ -1,5 +1,5 @@
 const { tempDir } = require('../../paths')
-const { exists } = require('@keg-hub/jsutils')
+const { exists, toNum } = require('@keg-hub/jsutils')
 const { browserMap } = require('../browserMap')
 
 /**
@@ -12,10 +12,22 @@ const setRunEnvs = params => {
     debug,
     hide,
     show,
+    stickyRuns,
+    stickyWait,
     storage,
+    sync,
     timeout
   } = params
 
+  if(exists(sync))
+    process.env.WB_RUN_SYNC = sync
+  
+  if(exists(toNum(stickyRuns)))
+    process.env.WB_STICKY_RUNS = stickyRuns
+
+  if(exists(toNum(stickyWait)))
+    process.env.WB_STICKY_WAIT = stickyWait
+  
   if(exists(browser))
     process.env.WB_BROWSER = browserMap[browser] || browser
 
@@ -23,6 +35,7 @@ const setRunEnvs = params => {
     process.env.WB_STORAGE_DIR = storage
 
   if(debug){
+    process.env.WB_RUN_SYNC = true
     process.env.WB_HEADLESS = false
     process.env.WB_HEADED = true
     process.env.WB_TEST_TIMEOUT = 0

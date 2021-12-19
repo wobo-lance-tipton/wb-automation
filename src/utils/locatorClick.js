@@ -7,8 +7,8 @@ const { Logger } = require('@keg-hub/cli-utils')
  * 
  * @retruns {Object} - The locator object found from the passed in params
  */
-const locatorClick = async (parent, selector) => {
-  Logger.highlight(`[WB-AUTO] Clicking on locator`, selector)
+const locatorClick = async (parent, selector, browser) => {
+  Logger.highlight(`${browser} Clicking on locator`, selector)
   const locator = parent.locator(selector)
   await locator.click()
 

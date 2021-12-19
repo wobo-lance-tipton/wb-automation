@@ -9,7 +9,7 @@ const { locatorClick } = require('../utils/locatorClick')
  * 
  * @returns {Void}
  */
-const removeSticky = async page => {
+const removeSticky = async (page, browser) => {
   /**
    * Gets the last object added to the canvas stage and clicks it
    * Since the sticky was just added, it should be the last item on the canvas
@@ -22,7 +22,7 @@ const removeSticky = async page => {
 
   /** Finds the popper menu, then clicks the delete button */
   const menuPopLoc = await page.locator(selectors.canvas.stage.popper)
-  await locatorClick(menuPopLoc, selectors.canvas.stage.delete)
+  await locatorClick(menuPopLoc, selectors.canvas.stage.delete, browser)
 }
 
 /**
@@ -31,7 +31,7 @@ const removeSticky = async page => {
  * 
  * @returns {Void}
  */
-const addStickyText = async page => {
+const addStickyText = async (page, browser) => {
   const stickyLoc = await page.locator(selectors.canvas.stage.sticky).last()
   await stickyLoc.click()
   
@@ -42,7 +42,7 @@ const addStickyText = async page => {
   await textLoc.fill(`All your stickies are belong to us`)
 
   await wait(world.app.timeout)
-  Logger.log(`[WB-AUTO] Finished adding text to sticky`)
+  Logger.log(`${browser} Finished adding text to sticky`)
 }
 
 /**
@@ -52,8 +52,8 @@ const addStickyText = async page => {
  * 
  * @returns {Void}
  */
-const addSticky = async page => {
-  await locatorClick(page, selectors.canvas.bar.add)
+const addSticky = async (page, browser) => {
+  await locatorClick(page, selectors.canvas.bar.add, browser)
   const stickyLoc = await page.locator(selectors.canvas.bar.sticky).first()
   stickyLoc.click()
 }
@@ -65,20 +65,20 @@ const addSticky = async page => {
  * 
  * @returns {Void}
  */
-const addThenRemoveSticky = async page => {
-  Logger.log(`[WB-AUTO] Adding sticky to canvas stage`)
-  await addSticky(page)
+const addThenRemoveSticky = async (page, browser) => {
+  Logger.log(`${browser} Adding sticky to canvas stage`)
+  await addSticky(page, browser)
   await wait(world.app.timeout)
 
-  Logger.log(`[WB-AUTO] Adding text to sticky`)
-  await addStickyText(page)
+  Logger.log(`${browser} Adding text to sticky`)
+  await addStickyText(page, browser)
   await wait(world.app.timeout)
   
-  Logger.log(`[WB-AUTO] Removing sticky from canvas stage`)
-  await removeSticky(page)
+  Logger.log(`${browser} Removing sticky from canvas stage`)
+  await removeSticky(page, browser)
 
   await wait(world.app.timeout)
-  Logger.log(`[WB-AUTO] Finished sticky interaction`)
+  Logger.log(`${browser} Finished sticky interaction`)
 }
 
 module.exports = {

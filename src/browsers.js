@@ -8,18 +8,15 @@ const pwConf = require('../configs/playwright.config')
  * Checks the output from the browser automation
  * Logs message based on the output
  */
-const handleOutput = async output => {
+const handleOutput = async (browser, error) => {
   Logger.empty()
 
-  output &&
-    output.map(({ browser, error }) => {
-      if(!error)
-        return Logger.log(`  ${Logger.colors.green(`✔ PASS`)} - Browser ${capitalize(browser)} test automation\n`)
+  if(!error)
+    return Logger.log(`  ${Logger.colors.green(`✔ PASS`)} - Browser ${capitalize(browser)} test automation\n`)
 
-      Logger.log(`  ${Logger.colors.red(`✕ FAIL`)} - Browser ${capitalize(browser)} test automation`)
-      Logger.log(`    `, Logger.colors.red(error.message))
-      // TODO: Save report somewhere
-    })
+  Logger.log(`  ${Logger.colors.red(`✕ FAIL`)} - Browser ${capitalize(browser)} test automation`)
+  Logger.log(`    `, Logger.colors.red(error.message))
+  // TODO: Save report somewhere
 
   Logger.empty()
 }
@@ -36,18 +33,17 @@ const automate = async () => {
 
   const browsers = pwConf.browserName ? [pwConf.browserName] : ['chromium', 'firefox', 'webkit']
 
-  const output = await browsers.reduce(async (toResolve, browser) => {
-    const acc = await toResolve
+  Logger.highlight(`[WB-AUTO] Running browsers in ${world.app.sync ? 'sync' : 'async'} mode`)
+
+  await browsers.reduce(async (toResolve, browser) => {
+    if(world.app.sync) await toResolve
     Logger.empty()
     Logger.subHeader(`[WB-AUTO] Running ${capitalize(browser)} Browser Automation`)
     Logger.empty()
     const error = await automateCanvas(deepMerge(pwConf, {browserName: browser}))
-    acc.push({ browser, error })
 
-    return acc
+    return handleOutput(browser, error)
   }, Promise.resolve([]))
-
-  return handleOutput(output)
 }
 
 require.main === module

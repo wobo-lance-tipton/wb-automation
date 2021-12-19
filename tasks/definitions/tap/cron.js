@@ -132,7 +132,7 @@ module.exports = {
         env: `WB_STORAGE_CLEAN`,
         example: 'npm run cron -- clean=true',
         description: 'Cleans the temporary storage folder by deleting and recreating',
-      }
+      },
     }
   }
 }

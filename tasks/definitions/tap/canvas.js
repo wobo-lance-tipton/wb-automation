@@ -96,6 +96,13 @@ module.exports = {
         type: 'number',
         default: 2000,
       },
+      sync: {
+        type: 'bool',
+        default: false,
+        env: `WB_RUN_SYNC`,
+        example: 'npm run canvas -- sync=true',
+        description: 'Run browser tests synchronously, one browser after another',
+      },
       debug: {
         type: 'bool',
         env: `WB_TEST_DEBUG`,
@@ -112,6 +119,16 @@ module.exports = {
         env: `WB_STORAGE_CLEAN`,
         example: 'npm run canvas -- clean=true',
         description: 'Cleans the temporary storage folder by deleting and recreating',
+      },
+      stickyRuns: {
+        env: `WB_STICKY_RUNS`,
+        example: 'npm run canvas -- stickyRuns=5',
+        description: 'Number of times to run the sticky flow, before closing the browser',
+      },
+      stickyWait: {
+        env: `WB_STICKY_WAIT`,
+        example: 'npm run canvas -- stickyWait=60',
+        description: 'Time to wait between sticky runs in second (1 second)',
       }
     },
   },
