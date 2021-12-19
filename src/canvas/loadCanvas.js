@@ -37,7 +37,8 @@ const loadFromExisting = async page => {
  */
 const loadCanvas = async page => {
   /** Check if the canvas preview exist exists */
-  const exists = await locatorExists(page, selectors.home.main.preview, 1)
+  const exists = await locatorExists(page, selectors.home.main.preview)
+  Logger.highlight(`[WB-AUTO] Canvas exists`, exists)
 
   /**
    * If a canvas does not exist, then create one

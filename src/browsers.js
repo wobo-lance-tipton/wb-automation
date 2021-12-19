@@ -38,7 +38,9 @@ const automate = async () => {
 
   const output = await browsers.reduce(async (toResolve, browser) => {
     const acc = await toResolve
-    Logger.highlight(`[WB-AUTO] Running`, capitalize(browser), `Browser Automation`)
+    Logger.empty()
+    Logger.subHeader(`[WB-AUTO] Running ${capitalize(browser)} Browser Automation`)
+    Logger.empty()
     const error = await automateCanvas(deepMerge(pwConf, {browserName: browser}))
     acc.push({ browser, error })
 
