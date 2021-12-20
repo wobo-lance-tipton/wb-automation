@@ -17,7 +17,7 @@ const removeSticky = async (page, browser) => {
    */
   await wrapSessionCheck(async () => {
     const stickyLoc = await page.locator(selectors.canvas.stage.sticky).last()
-    await stickyLoc.click()
+    await stickyLoc.click({timeout: world.app.timeout})
   }, page, browser)
 
   /** Give popper time to showup */
@@ -53,7 +53,7 @@ const addStickyText = async (page, browser) => {
   let stickyLoc
   await wrapSessionCheck(async () => {
     stickyLoc = await page.locator(selectors.canvas.stage.sticky).last()
-    await stickyLoc.click()
+    await stickyLoc.click({timeout: world.app.timeout})
   }, page, browser)
 
   /** Give child div time update to content-editable */
@@ -62,7 +62,9 @@ const addStickyText = async (page, browser) => {
   await wrapSessionCheck(async () => {
     const textLoc = stickyLoc.locator(selectors.canvas.stage.text)
     await textLoc.click()
-    await textLoc.fill(`All your stickies are belong to us`)
+    await textLoc.fill(`All your stickies are belong to us`, {
+      timeout: world.app.timeout
+    })
   }, page, browser)
 
   Log(browser, `Finished adding text to sticky`)
@@ -79,7 +81,7 @@ const addSticky = async (page, browser) => {
   await locatorClick(page, selectors.canvas.bar.add, browser)
   await wrapSessionCheck(async () => {
     const stickyLoc = await page.locator(selectors.canvas.bar.sticky).first()
-    stickyLoc.click()
+    stickyLoc.click({timeout: world.app.timeout})
   }, page, browser)
 }
 

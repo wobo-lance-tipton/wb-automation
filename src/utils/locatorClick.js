@@ -45,7 +45,7 @@ const locatorClick = async (page, selector, browser) => {
   return await wrapSessionCheck(async () => {
     Log.highlight(browser, `Clicking on locator`, selector)
     const locator = page.locator(selector)
-    await locator.click()
+    await locator.click({timeout: world.app.timeout})
   
     return locator
   }, page, browser)
