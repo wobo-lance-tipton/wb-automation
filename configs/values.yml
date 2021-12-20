@@ -4,7 +4,7 @@ env:
   WB_USER_PASS: ""
   WB_HEADED: false
   WB_HEADLESS: true
-  WB_RUN_SYNC: false
+  WB_RUN_SYNC: true
   WB_STICKY_RUNS: 2
   WB_STICKY_WAIT: 3
   WB_STICKY_CREATES: 1
