@@ -18,31 +18,25 @@ const setRunEnvs = params => {
     stickyWait,
     storage,
     sync,
-    timeout
+    timeout,
   } = params
 
-  if(!exists(process.env.NODE_ENV) && exists(env))
-    process.env.NODE_ENV = env
+  if (!exists(process.env.NODE_ENV) && exists(env)) process.env.NODE_ENV = env
 
-  if(exists(sync))
-    process.env.WB_RUN_SYNC = sync
-  
-  if(exists(toNum(stickyRuns)))
-    process.env.WB_STICKY_RUNS = stickyRuns
+  if (exists(sync)) process.env.WB_RUN_SYNC = sync
 
-  if(exists(toNum(stickyWait)))
-    process.env.WB_STICKY_WAIT = stickyWait
+  if (exists(toNum(stickyRuns))) process.env.WB_STICKY_RUNS = stickyRuns
 
-  if(exists(toNum(stickies)))
-    process.env.WB_STICKY_CREATES = stickies
+  if (exists(toNum(stickyWait))) process.env.WB_STICKY_WAIT = stickyWait
 
-  if(exists(browser))
-    process.env.WB_BROWSER = browserMap[browser] || browser
+  if (exists(toNum(stickies))) process.env.WB_STICKY_CREATES = stickies
 
-  if(exists(storage) && storage !== tempDir)
+  if (exists(browser)) process.env.WB_BROWSER = browserMap[browser] || browser
+
+  if (exists(storage) && storage !== tempDir)
     process.env.WB_STORAGE_DIR = storage
 
-  if(debug){
+  if (debug) {
     process.env.WB_RUN_SYNC = true
     process.env.WB_HEADLESS = false
     process.env.WB_HEADED = true
@@ -50,7 +44,7 @@ const setRunEnvs = params => {
     process.env.WB_TEST_RETRIES = 0
     process.env.PWDEBUG = 1
     process.env.DEBUG = `pw:api`
-    return 
+    return
   }
 
   if (show || !hide) {

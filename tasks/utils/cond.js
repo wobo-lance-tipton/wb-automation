@@ -1,6 +1,6 @@
 const { either, noPropArr, toBool } = require('@keg-hub/jsutils')
 
-const condArr = (opt1, condition, opt2=noPropArr) => {
+const condArr = (opt1, condition, opt2 = noPropArr) => {
   return either(
     opt1,
     noPropArr,
@@ -9,5 +9,5 @@ const condArr = (opt1, condition, opt2=noPropArr) => {
 }
 
 module.exports = {
-  condArr
+  condArr,
 }

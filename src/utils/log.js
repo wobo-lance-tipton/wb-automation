@@ -6,7 +6,7 @@ const { Logger } = require('@keg-hub/cli-utils')
  * @param {string} message - Message to log
  * @param {string} [method=log] - Log method to call
  */
-const Log = (browser, message, method='log') => {
+const Log = (browser, message, method = 'log') => {
   Logger[method](message ? `${browser} ${message}` : browser)
 }
 
@@ -15,5 +15,5 @@ Log.highlight = (browser, start, ...rest) => {
 }
 
 module.exports = {
-  Log
+  Log,
 }

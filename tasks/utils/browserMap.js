@@ -1,4 +1,3 @@
-
 const browserMap = {
   all: '',
   ch: 'chromium',
@@ -12,5 +11,5 @@ const browserMap = {
 }
 
 module.exports = {
-  browserMap
+  browserMap,
 }

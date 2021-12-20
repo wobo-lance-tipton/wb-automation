@@ -28,5 +28,5 @@ const createCanvas = async (page, browser) => {
 }
 
 module.exports = {
-  createCanvas
+  createCanvas,
 }

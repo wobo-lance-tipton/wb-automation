@@ -12,12 +12,12 @@ const { locatorClick } = require('../utils/locatorClick')
  */
 const loginForm = async (page, browser) => {
   Log(browser, `User not logged in, running login flow`)
-  
+
   /** Find the form and ensure it exists */
   const formLoc = page.locator(selectors.login.form.parent)
-  await formLoc.waitFor({timeout: world.app.timeout})
+  await formLoc.waitFor({ timeout: world.app.timeout })
   await locatorClick(page, selectors.login.form.parent, browser)
-  
+
   /** Find the email input and fill with the users email */
   Log.highlight(browser, `Logging-in user`, world.user.email)
   const emailLoc = page.locator(selectors.login.form.email)
@@ -29,7 +29,7 @@ const loginForm = async (page, browser) => {
   /** Find the password input, and fill it with the user password */
   Log(browser, `Entering user password`)
   const passLoc = page.locator(selectors.login.form.pass)
-  await passLoc.waitFor({timeout: world.app.timeout})
+  await passLoc.waitFor({ timeout: world.app.timeout })
   await passLoc.fill(world.user.pass)
 
   /** Find and click the singin button */
@@ -41,18 +41,18 @@ const loginForm = async (page, browser) => {
 
 /**
  * Checks login state, and logs in a user if not already logged in
- * 
+ *
  * @param {Object} context - Playwright Browser context
  * @param {Object} pwConf - Playwright config object
  *
  * @returns {Object} - Playwright page object created from the context
  */
-const login = async (context, pwConf=noOpObj, browser) => {
-  if(!context) throw new Error(`Browser context is required to login`)
+const login = async (context, pwConf = noOpObj, browser) => {
+  if (!context) throw new Error(`Browser context is required to login`)
 
   Log(browser, `Creating new page`)
   const page = await context.newPage()
-  if(!page) throw new Error(`Browser page could not be created`)
+  if (!page) throw new Error(`Browser page could not be created`)
 
   /**
    * Open the browser page to the world url
@@ -76,10 +76,11 @@ const login = async (context, pwConf=noOpObj, browser) => {
    * If it is, we are already logged in, so return
    * If we were redirected, then run through the login flow
    */
-  return worldAppUrl.href !== pwAppUrl.href ? await loginForm(page, browser) : page
+  return worldAppUrl.href !== pwAppUrl.href
+    ? await loginForm(page, browser)
+    : page
 }
 
-
 module.exports = {
-  login
+  login,
 }

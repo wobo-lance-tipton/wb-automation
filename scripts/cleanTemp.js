@@ -10,7 +10,7 @@ const { loadEnvs } = require('../tasks/utils/envs/loadEnvs')
  */
 ;(() => {
   loadEnvs(process.env.NODE_ENV || 'local', [configsDir])
-  const { WB_STORAGE_DIR=tempDir } = process.env
+  const { WB_STORAGE_DIR = tempDir } = process.env
 
   Logger.empty()
   Logger.highlight(`Cleaning temp dir`, tempDir)
@@ -23,6 +23,8 @@ const { loadEnvs } = require('../tasks/utils/envs/loadEnvs')
   fs.writeFileSync(path.join(WB_STORAGE_DIR, '.keep'), '')
 
   Logger.empty()
-  Logger.log(`  ${Logger.colors.green(`✔ SUCCESS`)} - Finished cleaning temp dir`)
+  Logger.log(
+    `  ${Logger.colors.green(`✔ SUCCESS`)} - Finished cleaning temp dir`
+  )
   Logger.empty()
 })()

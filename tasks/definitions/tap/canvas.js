@@ -16,13 +16,9 @@ const { setRunEnvs } = require('../../utils/envs/setRunEnvs')
 const canvasRun = async ({ params }) => {
   setRunEnvs(params)
 
-  params.clean && await npm(['run', 'clean:temp'])
+  params.clean && (await npm(['run', 'clean:temp']))
 
-  await npm(
-    ['run', 'automate'],
-    {env: {RUN_FROM_TASK: 'canvas'}},
-    appRoot
-  )
+  await npm(['run', 'automate'], { env: { RUN_FROM_TASK: 'canvas' } }, appRoot)
 }
 
 module.exports = {
@@ -100,7 +96,8 @@ module.exports = {
         default: false,
         env: `WB_RUN_SYNC`,
         example: 'npm run canvas -- sync=true',
-        description: 'Run browser tests synchronously, one browser after another',
+        description:
+          'Run browser tests synchronously, one browser after another',
       },
       debug: {
         type: 'bool',
@@ -110,20 +107,23 @@ module.exports = {
       },
       storage: {
         default: tempDir,
-        example: 'npm run canvas -- storage=/local/absolute/path/to/storage/dir',
+        example:
+          'npm run canvas -- storage=/local/absolute/path/to/storage/dir',
         env: `WB_STORAGE_DIR`,
         description: 'Location to store temporary files',
       },
       clean: {
         env: `WB_STORAGE_CLEAN`,
         example: 'npm run canvas -- clean=true',
-        description: 'Cleans the temporary storage folder by deleting and recreating',
+        description:
+          'Cleans the temporary storage folder by deleting and recreating',
       },
       stickyRuns: {
         default: 1,
         env: `WB_STICKY_RUNS`,
         example: 'npm run canvas -- stickyRuns=5',
-        description: 'Number of times to run the sticky flow, before closing the browser',
+        description:
+          'Number of times to run the sticky flow, before closing the browser',
       },
       stickyWait: {
         default: 3,
@@ -135,8 +135,9 @@ module.exports = {
         default: 3,
         env: `WB_STICKY_CREATES`,
         example: 'npm run canvas -- stickies=10',
-        description: 'The amount of stickies to create and remove form the canvas (3)',
-      }
+        description:
+          'The amount of stickies to create and remove form the canvas (3)',
+      },
     },
   },
 }

@@ -11,10 +11,16 @@ const { wasRunFromTask } = require('./utils/wasRunFromTask')
 const handleOutput = async (browser, error) => {
   Logger.empty()
 
-  if(!error)
-    return Logger.log(`  ${Logger.colors.green(`✔ PASS`)} - ${capitalize(browser)} test automation\n`)
+  if (!error)
+    return Logger.log(
+      `  ${Logger.colors.green(`✔ PASS`)} - ${capitalize(
+        browser
+      )} test automation\n`
+    )
 
-  Logger.log(`  ${Logger.colors.red(`✕ FAIL`)} - ${capitalize(browser)} test automation`)
+  Logger.log(
+    `  ${Logger.colors.red(`✕ FAIL`)} - ${capitalize(browser)} test automation`
+  )
   Logger.log(`  `, Logger.colors.red(error.stack || error.message))
   // TODO: Save report somewhere
 
@@ -31,21 +37,29 @@ const automate = async () => {
   /** Ensure the process was started from a task so all ENVs are loaded */
   wasRunFromTask()
 
-  const browsers = pwConf.browserName ? [pwConf.browserName] : ['chromium', 'firefox', 'webkit']
+  const browsers = pwConf.browserName
+    ? [pwConf.browserName]
+    : ['chromium', 'firefox', 'webkit']
 
-  Logger.subHeader(`[WB-AUTO] Running Browser Automation for ${browsers.map(br => capitalize(br)).join(' | ')}`)
-  Logger.highlight(`[WB-AUTO] Running browsers in ${world.app.sync ? 'sync' : 'async'} mode\n`)
+  Logger.subHeader(
+    `[WB-AUTO] Running Browser Automation for ${browsers
+      .map(br => capitalize(br))
+      .join(' | ')}`
+  )
+  Logger.highlight(
+    `[WB-AUTO] Running browsers in ${world.app.sync ? 'sync' : 'async'} mode\n`
+  )
 
   await browsers.reduce(async (toResolve, browser) => {
-    if(world.app.sync) await toResolve
+    if (world.app.sync) await toResolve
     Logger.empty()
     Logger.empty()
-    const error = await automateCanvas(deepMerge(pwConf, {browserName: browser}))
+    const error = await automateCanvas(
+      deepMerge(pwConf, { browserName: browser })
+    )
 
     return handleOutput(browser, error)
   }, Promise.resolve([]))
 }
 
-require.main === module
-  ? automate()
-  : module.exports = { automate }
+require.main === module ? automate() : (module.exports = { automate })

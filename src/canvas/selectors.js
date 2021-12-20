@@ -6,17 +6,17 @@ const selectors = {
       continue: `input#continueBtn`,
       pass: `input#UserLogin_password`,
       signIn: `input#SigninBtn`,
-    }
+    },
   },
   home: {
     main: {
       preview: `a[data-testid="canvas-preview-1"]`,
-      new: `button.MuiButtonBase-root >> text=New OKR Canvas`
+      new: `button.MuiButtonBase-root >> text=New OKR Canvas`,
     },
     modal: {
       blank: `button[data-value="Blank"]`,
-      create: `button.MuiButtonBase-root >> text=Create`
-    }
+      create: `button.MuiButtonBase-root >> text=Create`,
+    },
   },
   canvas: {
     bar: {
@@ -29,14 +29,14 @@ const selectors = {
     stage: {
       sticky: `main#stage > div > article`,
       text: `div[spellcheck="false"]`,
-      delete: `main#stage > div[data-popper-placement="top"] button[name="delete"]`
-    }
+      delete: `main#stage > div[data-popper-placement="top"] button[name="delete"]`,
+    },
   },
   session: {
-    extend: `button[data-testid="timeout-extend"]`
-  }
+    extend: `button[data-testid="timeout-extend"]`,
+  },
 }
 
 module.exports = {
-  selectors
+  selectors,
 }

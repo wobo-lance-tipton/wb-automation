@@ -22,7 +22,7 @@ const loadFromExisting = async (page, browser) => {
 
   /** Wait for the canvas header name to load from the canvas stage */
   const canvasLoc = page.locator(selectors.canvas.header.name)
-  await canvasLoc.waitFor({timeout: world.app.timeout})
+  await canvasLoc.waitFor({ timeout: world.app.timeout })
 
   const url = await page.url()
   Log.highlight(browser, `Finished loading canvas stage`, url)
@@ -36,7 +36,6 @@ const loadFromExisting = async (page, browser) => {
  * @returns {Void}
  */
 const loadCanvas = async (page, browser) => {
-
   /** Check if the session.extend button exists, and click it if needed */
   await checkSession(page, browser)
 
@@ -47,12 +46,12 @@ const loadCanvas = async (page, browser) => {
   /**
    * If a canvas does not exist, then create one
    * Otherwise load the first canvas on the home page
-  */
+   */
   return !exists
     ? await createCanvas(page, browser)
     : await loadFromExisting(page, browser)
 }
 
 module.exports = {
-  loadCanvas
+  loadCanvas,
 }

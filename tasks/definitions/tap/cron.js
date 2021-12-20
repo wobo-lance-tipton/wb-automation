@@ -1,4 +1,4 @@
-const cron = require('node-cron');
+const cron = require('node-cron')
 const { appRoot } = require('../../paths')
 const { noOpObj } = require('@keg-hub/jsutils')
 const { Logger, npm } = require('@keg-hub/cli-utils')
@@ -9,11 +9,11 @@ let RUNNING_JOB
  * Validates the passed in cron time
  * @throws
  * @param {string} time - Cron time string
- * 
+ *
  * @returns {Void}
  */
 const validateTime = time => {
-  if(cron.validate(time)) return
+  if (cron.validate(time)) return
 
   Logger.log(
     Logger.colors.red(`[ERROR]`),
@@ -22,7 +22,6 @@ const validateTime = time => {
 
   process.exit(1)
 }
-
 
 /**
  * Kills an actively running job
@@ -43,16 +42,17 @@ const addExitListeners = () => {
     'SIGUSR1',
     'SIGUSR2',
     'uncaughtException',
-    'SIGTERM'
-  ])
-    .map(event => process.on(event, exitCode => {
+    'SIGTERM',
+  ]).map(event =>
+    process.on(event, exitCode => {
       /** Only need to call exit once */
-      if(exitCalled) return
-      
+      if (exitCalled) return
+
       exitCalled = true
       Logger.warn(`\n[WB-AUTO] Exiting cronjob\n`)
       killRunningJob()
-    }))
+    })
+  )
 }
 
 /**
@@ -68,14 +68,10 @@ const addExitListeners = () => {
  * @returns {void}
  */
 const cronRun = async ({ params }) => {
-  const {
-    browser,
-    clean,
-    time,
-  } = params
+  const { browser, clean, time } = params
 
   /** Clean the temp folder clean param exists */
-  clean && await npm(['run', 'clean:temp'])
+  clean && (await npm(['run', 'clean:temp']))
 
   /** Stop a currently running job if it already exists */
   killRunningJob()
@@ -90,10 +86,14 @@ const cronRun = async ({ params }) => {
   Logger.highlight(`[WB-AUTO] Starting cronjob schedule`, time)
 
   /** Start the cronjob */
-  RUNNING_JOB = cron.schedule(time, async () => {
-    Logger.log(`[WB-AUTO] Running scheduled cronjob at`, new Date())
-    await npm(options, noOpObj, appRoot)
-  }, {scheduled: true})
+  RUNNING_JOB = cron.schedule(
+    time,
+    async () => {
+      Logger.log(`[WB-AUTO] Running scheduled cronjob at`, new Date())
+      await npm(options, noOpObj, appRoot)
+    },
+    { scheduled: true }
+  )
 
   addExitListeners()
 }
@@ -109,7 +109,7 @@ module.exports = {
       time: {
         required: true,
         env: `WB_CRON_TIME`,
-        example: 'npm run cron -- time=\"30 * * * *\"',
+        example: 'npm run cron -- time="30 * * * *"',
         description: 'Cron time formatted string used to schedule the cron job',
       },
       browser: {
@@ -131,8 +131,9 @@ module.exports = {
       clean: {
         env: `WB_STORAGE_CLEAN`,
         example: 'npm run cron -- clean=true',
-        description: 'Cleans the temporary storage folder by deleting and recreating',
+        description:
+          'Cleans the temporary storage folder by deleting and recreating',
       },
-    }
-  }
+    },
+  },
 }

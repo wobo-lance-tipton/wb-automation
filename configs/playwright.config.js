@@ -57,8 +57,6 @@ const config = {
   ],
 }
 
-
 globalSetup()
 
 module.exports = config
-

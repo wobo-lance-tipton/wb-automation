@@ -11,14 +11,13 @@ const locatorExists = async (parent, selector, browser, silent) => {
   !silent && Log.highlight(browser, `Checking if locator exists`, selector)
   const locator = parent.locator(selector)
   try {
-    await locator.waitFor({timeout: world.app.timeout})
+    await locator.waitFor({ timeout: world.app.timeout })
     return true
-  }
-  catch(err){
+  } catch (err) {
     return false
   }
 }
 
 module.exports = {
-  locatorExists
+  locatorExists,
 }

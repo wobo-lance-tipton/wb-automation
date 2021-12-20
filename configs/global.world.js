@@ -7,12 +7,12 @@ const globalSetup = () => {
     WB_BASE_URL,
     WB_USER_EMAIL,
     WB_USER_PASS,
-    WB_RUN_SYNC=false,
-    WB_STICKY_RUNS=1,
-    WB_STICKY_WAIT=3,
-    WB_STICKY_CREATES=3,
-    WB_TEST_TIMEOUT=5000,
-    WB_STORAGE_DIR=tempDir,
+    WB_RUN_SYNC = false,
+    WB_STICKY_RUNS = 1,
+    WB_STICKY_WAIT = 3,
+    WB_STICKY_CREATES = 3,
+    WB_TEST_TIMEOUT = 5000,
+    WB_STORAGE_DIR = tempDir,
   } = process.env
 
   global.world = {
@@ -35,7 +35,7 @@ const globalSetup = () => {
       tracesDir: path.join(WB_STORAGE_DIR, 'traces'),
       videosDir: path.join(WB_STORAGE_DIR, 'videos'),
       downloadsDir: path.join(WB_STORAGE_DIR, 'downloads'),
-    }
+    },
   }
 
   return global.world
