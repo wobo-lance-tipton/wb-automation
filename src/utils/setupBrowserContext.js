@@ -20,7 +20,10 @@ const getBrowserOpts = (pwConfig) => {
 
 const setupBrowserContext = async pwConfig => {
   const bConf = getBrowserOpts(pwConfig) 
-  return await playwright[pwConfig.browserName || 'chromium'].launchPersistentContext(
+  if(!pwConfig.browserName)
+    throw new Error(`Missing browser name. Must be one of 'chromium', 'firefox', or 'webkit'`)
+
+  return await playwright[pwConfig.browserName].launchPersistentContext(
     world.paths.storageDir,
     bConf
   )

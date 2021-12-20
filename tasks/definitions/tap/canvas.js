@@ -1,5 +1,4 @@
 const { npm } = require('@keg-hub/cli-utils')
-const { noOpObj } = require('@keg-hub/jsutils')
 const { appRoot, tempDir } = require('../../paths')
 const { setRunEnvs } = require('../../utils/envs/setRunEnvs')
 
@@ -79,7 +78,7 @@ module.exports = {
       height: {
         env: `WB_BROWSER_HEIGHT`,
         example: 'npm run canvas -- height=800',
-        description: 'Height of the borwser when running in headed mode (720)',
+        description: 'Height of the browser when running in headed mode (720)',
         type: 'number',
         default: 720,
       },
@@ -87,7 +86,7 @@ module.exports = {
         env: `WB_TEST_TIMEOUT`,
         description: 'How long to wait until a test will timeout (10000 ms)',
         type: 'number',
-        default: 2000,
+        default: 5000,
       },
       speed: {
         env: `WB_BROWSER_SPEED`,
@@ -121,14 +120,22 @@ module.exports = {
         description: 'Cleans the temporary storage folder by deleting and recreating',
       },
       stickyRuns: {
+        default: 1,
         env: `WB_STICKY_RUNS`,
         example: 'npm run canvas -- stickyRuns=5',
         description: 'Number of times to run the sticky flow, before closing the browser',
       },
       stickyWait: {
+        default: 3,
         env: `WB_STICKY_WAIT`,
         example: 'npm run canvas -- stickyWait=60',
         description: 'Time to wait between sticky runs in second (1 second)',
+      },
+      stickies: {
+        default: 3,
+        env: `WB_STICKY_CREATES`,
+        example: 'npm run canvas -- stickies=10',
+        description: 'The amount of stickies to create and remove form the canvas (3)',
       }
     },
   },

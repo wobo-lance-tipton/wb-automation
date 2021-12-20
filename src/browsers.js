@@ -1,8 +1,8 @@
 const { Logger } = require('@keg-hub/cli-utils')
-const { deepMerge, capitalize } = require('@keg-hub/jsutils')
 const { automateCanvas } = require('./canvas/canvas')
-const { wasRunFromTask } = require('./utils/wasRunFromTask')
 const pwConf = require('../configs/playwright.config')
+const { deepMerge, capitalize } = require('@keg-hub/jsutils')
+const { wasRunFromTask } = require('./utils/wasRunFromTask')
 
 /**
  * Checks the output from the browser automation
@@ -12,10 +12,10 @@ const handleOutput = async (browser, error) => {
   Logger.empty()
 
   if(!error)
-    return Logger.log(`  ${Logger.colors.green(`✔ PASS`)} - Browser ${capitalize(browser)} test automation\n`)
+    return Logger.log(`  ${Logger.colors.green(`✔ PASS`)} - ${capitalize(browser)} test automation\n`)
 
-  Logger.log(`  ${Logger.colors.red(`✕ FAIL`)} - Browser ${capitalize(browser)} test automation`)
-  Logger.log(`    `, Logger.colors.red(error.message))
+  Logger.log(`  ${Logger.colors.red(`✕ FAIL`)} - ${capitalize(browser)} test automation`)
+  Logger.log(`  `, Logger.colors.red(error.stack || error.message))
   // TODO: Save report somewhere
 
   Logger.empty()
@@ -33,12 +33,12 @@ const automate = async () => {
 
   const browsers = pwConf.browserName ? [pwConf.browserName] : ['chromium', 'firefox', 'webkit']
 
-  Logger.highlight(`[WB-AUTO] Running browsers in ${world.app.sync ? 'sync' : 'async'} mode`)
+  Logger.subHeader(`[WB-AUTO] Running Browser Automation for ${browsers.map(br => capitalize(br)).join(' | ')}`)
+  Logger.highlight(`[WB-AUTO] Running browsers in ${world.app.sync ? 'sync' : 'async'} mode\n`)
 
   await browsers.reduce(async (toResolve, browser) => {
     if(world.app.sync) await toResolve
     Logger.empty()
-    Logger.subHeader(`[WB-AUTO] Running ${capitalize(browser)} Browser Automation`)
     Logger.empty()
     const error = await automateCanvas(deepMerge(pwConf, {browserName: browser}))
 

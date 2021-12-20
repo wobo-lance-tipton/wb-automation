@@ -1,6 +1,6 @@
 const { URL } = require('url')
+const { Log } = require('../utils/log')
 const { selectors } = require('./selectors')
-const { Logger } = require('@keg-hub/cli-utils')
 const { noOpObj, wait } = require('@keg-hub/jsutils')
 const { locatorClick } = require('../utils/locatorClick')
 
@@ -11,7 +11,7 @@ const { locatorClick } = require('../utils/locatorClick')
  * @returns {Void}
  */
 const loginForm = async (page, browser) => {
-  Logger.log(`${browser} User not logged in, running login flow`)
+  Log(browser, `User not logged in, running login flow`)
   
   /** Find the form and ensure it exists */
   const formLoc = page.locator(selectors.login.form.parent)
@@ -19,7 +19,7 @@ const loginForm = async (page, browser) => {
   await locatorClick(page, selectors.login.form.parent, browser)
   
   /** Find the email input and fill with the users email */
-  Logger.highlight(`${browser} Logging-in user`, world.user.email)
+  Log.highlight(browser, `Logging-in user`, world.user.email)
   const emailLoc = page.locator(selectors.login.form.email)
   await emailLoc.fill(world.user.email)
 
@@ -27,7 +27,7 @@ const loginForm = async (page, browser) => {
   await locatorClick(page, selectors.login.form.continue, browser)
 
   /** Find the password input, and fill it with the user password */
-  Logger.log(`${browser} Entering user password`)
+  Log(browser, `Entering user password`)
   const passLoc = page.locator(selectors.login.form.pass)
   await passLoc.waitFor({timeout: world.app.timeout})
   await passLoc.fill(world.user.pass)
@@ -35,7 +35,7 @@ const loginForm = async (page, browser) => {
   /** Find and click the singin button */
   await locatorClick(page, selectors.login.form.signIn, browser)
 
-  Logger.log(`${browser} Finished user login flow`)
+  Log(browser, `Finished user login flow`)
   return page
 }
 
@@ -50,7 +50,7 @@ const loginForm = async (page, browser) => {
 const login = async (context, pwConf=noOpObj, browser) => {
   if(!context) throw new Error(`Browser context is required to login`)
 
-  Logger.log(`${browser} Creating new page`)
+  Log(browser, `Creating new page`)
   const page = await context.newPage()
   if(!page) throw new Error(`Browser page could not be created`)
 
@@ -58,7 +58,7 @@ const login = async (context, pwConf=noOpObj, browser) => {
    * Open the browser page to the world url
    * Should be a canvas url defined with WB_BASE_URL env
    */
-  Logger.highlight(`${browser} Loading canvas url`, world.app.url)
+  Log.highlight(browser, `Loading canvas url`, world.app.url)
   const worldAppUrl = new URL(world.app.url)
   await page.goto(worldAppUrl.href)
 

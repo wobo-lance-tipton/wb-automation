@@ -8,16 +8,21 @@ const { browserMap } = require('../browserMap')
  */
 const setRunEnvs = params => {
   const {
+    env,
     browser,
     debug,
     hide,
     show,
+    stickies,
     stickyRuns,
     stickyWait,
     storage,
     sync,
     timeout
   } = params
+
+  if(!exists(process.env.NODE_ENV) && exists(env))
+    process.env.NODE_ENV = env
 
   if(exists(sync))
     process.env.WB_RUN_SYNC = sync
@@ -27,11 +32,14 @@ const setRunEnvs = params => {
 
   if(exists(toNum(stickyWait)))
     process.env.WB_STICKY_WAIT = stickyWait
-  
+
+  if(exists(toNum(stickies)))
+    process.env.WB_STICKY_CREATES = stickies
+
   if(exists(browser))
     process.env.WB_BROWSER = browserMap[browser] || browser
 
-  if(storage && storage !== tempDir)
+  if(exists(storage) && storage !== tempDir)
     process.env.WB_STORAGE_DIR = storage
 
   if(debug){

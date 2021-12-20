@@ -1,7 +1,7 @@
+const { Log } = require('../utils/log')
 const { selectors } = require('./selectors')
 const { wait } = require('@keg-hub/jsutils')
-const { Logger } = require('@keg-hub/cli-utils')
-const { locatorClick } = require('../utils/locatorClick')
+const { locatorClick, wrapSessionCheck } = require('../utils/locatorClick')
 
 /**
  * Finds the last Object added to the canvas stage and tries to remove it
@@ -10,19 +10,36 @@ const { locatorClick } = require('../utils/locatorClick')
  * @returns {Void}
  */
 const removeSticky = async (page, browser) => {
+
   /**
    * Gets the last object added to the canvas stage and clicks it
    * Since the sticky was just added, it should be the last item on the canvas
    */
-  const stickyLoc = await page.locator(selectors.canvas.stage.sticky).last()
-  await stickyLoc.click()
+  await wrapSessionCheck(async () => {
+    const stickyLoc = await page.locator(selectors.canvas.stage.sticky).last()
+    await stickyLoc.click()
+  }, page, browser)
 
   /** Give popper time to showup */
   await wait(world.app.timeout)
 
   /** Finds the popper menu, then clicks the delete button */
-  const menuPopLoc = await page.locator(selectors.canvas.stage.popper)
-  await locatorClick(menuPopLoc, selectors.canvas.stage.delete, browser)
+  await locatorClick(page, selectors.canvas.stage.delete, browser)
+}
+
+/**
+ * Removes the previously added stickies from the canvas stage
+ * @param {Object} page - Playwright page object
+ * @param {number} stickyAmount - Amount of stickies to be removed
+ * 
+ * @returns {Void}
+ */
+const clearStickies = async (page, stickyAmount, browser) => {
+  Log(browser, `Removing ${stickyAmount} stickies from canvas stage`)
+  for(let i=0; i < stickyAmount; i++){
+    Log(browser, `Removing sticky ${i + 1} of ${stickyAmount} from canvas stage`)
+    await removeSticky(page, browser)
+  }
 }
 
 /**
@@ -32,17 +49,23 @@ const removeSticky = async (page, browser) => {
  * @returns {Void}
  */
 const addStickyText = async (page, browser) => {
-  const stickyLoc = await page.locator(selectors.canvas.stage.sticky).last()
-  await stickyLoc.click()
   
+  let stickyLoc
+  await wrapSessionCheck(async () => {
+    stickyLoc = await page.locator(selectors.canvas.stage.sticky).last()
+    await stickyLoc.click()
+  }, page, browser)
+
   /** Give child div time update to content-editable */
   await wait(world.app.timeout)
 
-  const textLoc = stickyLoc.locator(selectors.canvas.stage.text)
-  await textLoc.fill(`All your stickies are belong to us`)
+  await wrapSessionCheck(async () => {
+    const textLoc = stickyLoc.locator(selectors.canvas.stage.text)
+    await textLoc.click()
+    await textLoc.fill(`All your stickies are belong to us`)
+  }, page, browser)
 
-  await wait(world.app.timeout)
-  Logger.log(`${browser} Finished adding text to sticky`)
+  Log(browser, `Finished adding text to sticky`)
 }
 
 /**
@@ -54,8 +77,25 @@ const addStickyText = async (page, browser) => {
  */
 const addSticky = async (page, browser) => {
   await locatorClick(page, selectors.canvas.bar.add, browser)
-  const stickyLoc = await page.locator(selectors.canvas.bar.sticky).first()
-  stickyLoc.click()
+  await wrapSessionCheck(async () => {
+    const stickyLoc = await page.locator(selectors.canvas.bar.sticky).first()
+    stickyLoc.click()
+  }, page, browser)
+}
+
+/**
+ * Creates a set number of stickies on the canvas stage
+ * @param {Object} page - Playwright page object
+ * @param {number} stickyAmount - Amount of stickies to be created
+ * 
+ * @returns {Void}
+ */
+const createStickies = async (page, stickyAmount, browser) => {
+  Log(browser, `Adding ${stickyAmount} stickies to canvas stage`)
+  for(let i=0; i < stickyAmount; i++){
+    Log(browser, `Adding sticky ${i + 1} of ${stickyAmount} to canvas stage`)
+    await addSticky(page, browser)
+  }
 }
 
 /**
@@ -66,19 +106,17 @@ const addSticky = async (page, browser) => {
  * @returns {Void}
  */
 const addThenRemoveSticky = async (page, browser) => {
-  Logger.log(`${browser} Adding sticky to canvas stage`)
-  await addSticky(page, browser)
-  await wait(world.app.timeout)
 
-  Logger.log(`${browser} Adding text to sticky`)
+  const stickyAmount = world.app.stickyCreates || 1
+  await createStickies(page, stickyAmount, browser)
+
+  Log(browser, `Adding text to sticky`)
   await addStickyText(page, browser)
-  await wait(world.app.timeout)
-  
-  Logger.log(`${browser} Removing sticky from canvas stage`)
-  await removeSticky(page, browser)
 
   await wait(world.app.timeout)
-  Logger.log(`${browser} Finished sticky interaction`)
+
+  await clearStickies(page, stickyAmount, browser)
+  Log(browser, `Finished sticky interaction`)
 }
 
 module.exports = {

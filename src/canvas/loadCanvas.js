@@ -1,9 +1,9 @@
+const { Log } = require('../utils/log')
 const { selectors } = require('./selectors')
 const { wait } = require('@keg-hub/jsutils')
-const { Logger } = require('@keg-hub/cli-utils')
 const { createCanvas } = require('./createCanvas')
-const { locatorClick } = require('../utils/locatorClick')
 const { locatorExists } = require('../utils/locatorExists')
+const { locatorClick, checkSession } = require('../utils/locatorClick')
 
 /**
  * Expects page to be on the Main Menu page
@@ -13,7 +13,7 @@ const { locatorExists } = require('../utils/locatorExists')
  * @returns {Void}
  */
 const loadFromExisting = async (page, browser) => {
-  Logger.log(`${browser} Loading canvas stage`)
+  Log(browser, `Loading canvas stage`)
   /** Click on the first canvas preview item to load the canvas stage */
   await locatorClick(page, selectors.home.main.preview, browser)
 
@@ -25,7 +25,7 @@ const loadFromExisting = async (page, browser) => {
   await canvasLoc.waitFor({timeout: world.app.timeout})
 
   const url = await page.url()
-  Logger.highlight(`${browser} Finished loading canvas stage`, url)
+  Log.highlight(browser, `Finished loading canvas stage`, url)
 }
 
 /**
@@ -36,9 +36,13 @@ const loadFromExisting = async (page, browser) => {
  * @returns {Void}
  */
 const loadCanvas = async (page, browser) => {
+
+  /** Check if the session.extend button exists, and click it if needed */
+  await checkSession(page, browser)
+
   /** Check if the canvas preview exist exists */
   const exists = await locatorExists(page, selectors.home.main.preview, browser)
-  Logger.highlight(`${browser} Canvas exists`, exists)
+  Log.highlight(browser, `Canvas exists`, exists)
 
   /**
    * If a canvas does not exist, then create one

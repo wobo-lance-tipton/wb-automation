@@ -1,8 +1,10 @@
 const { login } = require('./login')
+const { Log } = require('../utils/log')
 const { loadCanvas } = require('./loadCanvas')
 const { Logger } = require('@keg-hub/cli-utils')
-const { capitalize, exists } = require('@keg-hub/jsutils')
 const { addThenRemoveSticky } = require('./stickies')
+const { checkSession } = require('../utils/locatorClick')
+const { capitalize, exists } = require('@keg-hub/jsutils')
 const { setupBrowserContext } = require('../utils/setupBrowserContext')
 
 /**
@@ -31,15 +33,16 @@ const loopCanvas = async (page, reruns=0, browser) => {
   return new Promise(async (res, rej) => {
     try {
       reruns++
-      Logger.log(`${browser} Running stickies flow ${reruns} of ${world.app.stickyRuns}`)
+      Log(browser, `Running stickies flow ${reruns} of ${world.app.stickyRuns}`)
       await addThenRemoveSticky(page, browser)
       if(!hasReruns || (reruns >= world.app.stickyRuns)) return res(true)
       
-      Logger.highlight(`${browser} Sticky Runs:`, reruns)
-      Logger.highlight(`${browser} Runs Required:`, world.app.stickyRuns)
-
-      Logger.highlight(`\n${browser} Waiting ${world.app.stickyWait / 1000} seconds to rerun stickies flow\n`)
+      Log.highlight(browser, `Sticky Runs:`, reruns)
+      Log.highlight(browser, `Runs Required:`, world.app.stickyRuns)
+      Log('\n')
+      Log.highlight(browser, `Waiting ${world.app.stickyWait / 1000} seconds to rerun stickies flow\n`)
       setTimeout(async () => {
+        await checkSession(page, browser)
         await loopCanvas(page, reruns, browser)
         res(true)
       }, world.app.stickyWait)
@@ -61,20 +64,20 @@ const loopCanvas = async (page, reruns=0, browser) => {
  */
 const automateCanvas = async pwConf => {
   const browser = Logger.colors[browserColors[pwConf.browserName]](`${capitalize(pwConf.browserName)} -`)
+  let error
 
   return new Promise(async (res, rej) => {
     let context
-    let error
     try {
-      Logger.log(`${browser} Getting browser context`)
+      Log(browser, `Getting browser context`)
       context = await setupBrowserContext(pwConf)
       if(!context) throw new Error(`Browser context could not be created`)
   
-      Logger.log(`${browser} Opening OKR-Canvas and logging in`)
+      Log(browser, `Opening OKR-Canvas and logging in`)
       const page = await login(context, pwConf, browser)
       await loadCanvas(page, browser)
       await loopCanvas(page, 0, browser)
-      Logger.log(`${browser} Finished canvas stickies check for browser`)
+      Log(browser, `Finished canvas stickies check for browser`)
     }
     /**
      * Catch the error and set the error flag
@@ -89,6 +92,9 @@ const automateCanvas = async pwConf => {
         ? closeContext(context, rej, error)
         : setTimeout(async () => closeContext(context, res), world.app.timeout)
     }
+  })
+  .catch(err => {
+    return err || error
   })
 }
 

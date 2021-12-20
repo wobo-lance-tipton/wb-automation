@@ -9,8 +9,9 @@ const globalSetup = () => {
     WB_USER_PASS,
     WB_RUN_SYNC=false,
     WB_STICKY_RUNS=1,
-    WB_STICKY_WAIT=1,
-    WB_TEST_TIMEOUT=2000,
+    WB_STICKY_WAIT=3,
+    WB_STICKY_CREATES=3,
+    WB_TEST_TIMEOUT=5000,
     WB_STORAGE_DIR=tempDir,
   } = process.env
 
@@ -18,10 +19,11 @@ const globalSetup = () => {
     app: {
       url: WB_BASE_URL,
       sync: toBool(WB_RUN_SYNC),
+      timeout: toNum(WB_TEST_TIMEOUT),
+      stickyRuns: toNum(WB_STICKY_RUNS),
+      stickyCreates: toNum(WB_STICKY_CREATES),
       // Convert the sticky wait time from seconds to milliseconds
       stickyWait: toNum(WB_STICKY_WAIT) * 1000,
-      stickyRuns: toNum(WB_STICKY_RUNS),
-      timeout: toNum(WB_TEST_TIMEOUT),
     },
     user: {
       email: WB_USER_EMAIL,

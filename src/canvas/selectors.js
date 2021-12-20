@@ -20,8 +20,8 @@ const selectors = {
   },
   canvas: {
     bar: {
-      add: `div:nth-child(3) > button[type="button"]`,
-      sticky: `div:nth-child(3) > div > [draggable="true"]`,
+      add: `div.MuiScopedCssBaseline-root div div div:nth-child(3) > button[type="button"]`,
+      sticky: `div.MuiScopedCssBaseline-root div div div:nth-child(3) > div > [draggable="true"]`,
     },
     header: {
       name: `h1[data-testid="canvas-name"]`,
@@ -29,9 +29,11 @@ const selectors = {
     stage: {
       sticky: `main#stage > div > article`,
       text: `div[spellcheck="false"]`,
-      popper: `main#stage > div[data-popper-placement="top"]`,
-      delete: `button[name="delete"]`
+      delete: `main#stage > div[data-popper-placement="top"] button[name="delete"]`
     }
+  },
+  session: {
+    extend: `button[data-testid="timeout-extend"]`
   }
 }
 
